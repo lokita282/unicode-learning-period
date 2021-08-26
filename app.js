@@ -7,6 +7,7 @@ const morgan = require('morgan')
 const userRouter = require('./routes/user')
 const artworkRouter = require('./routes/artwork')
 const orderRouter = require('./routes/order')
+const port = process.env.PORT
 
 app.use(morgan(':method :url :status :response-time ms'))
 
@@ -28,4 +29,4 @@ app.use('/api/artwork', artworkRouter)
 app.use('/api/order', orderRouter)
 
 
-app.listen(3000, () => console.log('server has started'))
+app.listen(port, () => console.log('server has started'))
