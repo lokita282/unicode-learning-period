@@ -18,6 +18,6 @@ const artworkSchema = new mongoose.Schema({
     description: 'Enter length and breadth'
 
   }
-})
+},{timestamps:true})
 
 module.exports = mongoose.model('Artwork', artworkSchema)

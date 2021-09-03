@@ -26,6 +26,6 @@ const userSchema = mongoose.Schema({
     maxLength: 10,
     required: [true, 'Please provide a contact number']
   }
-})
+},{timestamps:true})
 
 module.exports = mongoose.model('User', userSchema)
