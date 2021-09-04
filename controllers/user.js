@@ -1,19 +1,37 @@
 const User = require('../models/User')
 
-//Create a user
-exports.createUser = async (req, res) => {
+//Register a user
+exports.registerNewUser = async (req, res) => {
   try{
-     const user = new User({
-       ...req.body
-     })
+     const user = new User(req.body)
+     const token = await user.generateAuthToken()
      await user.save()
      res.status(201).json({
        success: true,
-       data: user
+       data: user,
+       token
      })
 
   } catch(e) {
     res.status(400).json({
+      success: false,
+      message: e.message
+    })
+  }
+}
+
+//Login user
+exports.loginUser = async (req, res) => {
+  try{
+    const user = await User.findByCredentials(req.body.email, req.body.password)
+    const token = await user.generateAuthToken()
+    res.json({
+      success: true,
+      data: user,
+      token
+    })
+  } catch(e) {
+    res.json({
       success: false,
       message: e.message
     })
