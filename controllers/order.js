@@ -1,10 +1,14 @@
 const Order = require('../models/Order')
+const Artwork = require('../models/Artwork')
+const User = require('../models/User')
 
 //Create a order
 exports.createOrder = async (req, res) => {
   try{
+     //const order = new Order(req.body)
      const order = new Order({
        ...req.body,
+       orderedBy: req.user._id
      })
      await order.save()
      res.status(201).json({
@@ -23,7 +27,7 @@ exports.createOrder = async (req, res) => {
 //Get all orders
 exports.getOrders = async (req, res) => {
   try{
-    const orders = await Order.find({})
+    const orders = await Order.find({orderedBy: req.user._id})
     res.json({
       success: true,
       data: orders
@@ -39,7 +43,7 @@ exports.getOrders = async (req, res) => {
 //Update order details
 exports.updateOrder = async (req, res) => {
   try{
-    const order = await Order.findByIdAndUpdate({_id: req.params.id} , req.body, {new: true})
+    const order = await Order.findOneAndUpdate({_id: req.params._id, orderedBy: req.user._id} , req.body, {new: true})
 
     if(!order) {
       res.status(404).json({
@@ -52,6 +56,7 @@ exports.updateOrder = async (req, res) => {
       data: order
     })
   } catch(e) {
+    console.log(e)
     res.status(400).json({
       success: false,
       message: e.message
@@ -62,7 +67,7 @@ exports.updateOrder = async (req, res) => {
 //Delete Order
 exports.deleteOrder = async (req, res) => {
   try{
-    await Order.findByIdAndDelete(req.params.id)
+    await Order.findOneAndDelete({_id: req.params._id, orderedBy: req.user._id})
     res.json({
       success: true,
       data: "Order deleted successfully"

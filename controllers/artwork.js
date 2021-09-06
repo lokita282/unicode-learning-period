@@ -3,9 +3,7 @@ const Artwork = require('../models/Artwork')
 //Create an artwork
 exports.createArtwork = async (req, res) => {
   try{
-     const artwork = new Artwork({
-       ...req.body
-     })
+     const artwork = new Artwork(req.body)
      await artwork.save()
      res.status(201).json({
        success: true,

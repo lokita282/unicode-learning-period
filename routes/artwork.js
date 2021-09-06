@@ -1,5 +1,6 @@
 const express = require('express')
 const router = new express.Router()
+const auth = require('../middleware/auth')
 const {
   createArtwork,
   getArtworks,
@@ -8,15 +9,15 @@ const {
 } = require('../controllers/artwork')
 
 //Create new artwork
-router.post('/new', createArtwork)
+router.post('/new', auth, createArtwork)
 
 //Get artworks
-router.get('/get', getArtworks)
+router.get('/get', auth, getArtworks)
 
 //update artwork
-router.put('/update/:id', updateArtwork)
+router.put('/update/:id', auth, updateArtwork)
 
 //Delete artwork
-router.delete('/delete/:id', deleteArtwork)
+router.delete('/delete/:id', auth, deleteArtwork)
 
 module.exports = router

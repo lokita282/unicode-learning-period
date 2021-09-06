@@ -4,6 +4,7 @@ const orderSchema = mongoose.Schema({
   orderedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    unique: true,
     required: [true, 'Please add the User who is ordering']
   },
   artworks: [{

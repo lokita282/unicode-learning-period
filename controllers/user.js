@@ -57,7 +57,7 @@ exports.getUsers = async (req, res) => {
 //Update user details
 exports.updateUser = async (req, res) => {
   try{
-    const user = await User.findByIdAndUpdate({_id: req.params.id} , req.body, {new: true})
+    const user = await User.findByIdAndUpdate({_id: req.user._id} , req.body, {new: true})
 
     if(!user) {
       res.status(404).json({
@@ -80,7 +80,7 @@ exports.updateUser = async (req, res) => {
 //Delete User
 exports.deleteUser = async (req, res) => {
   try{
-    await User.findByIdAndDelete(req.params.id)
+    await User.findByIdAndDelete(req.user._id)
     res.json({
       success: true,
       data: "User deleted successfully"
