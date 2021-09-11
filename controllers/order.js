@@ -24,8 +24,8 @@ exports.createOrder = async (req, res) => {
   }
 }
 
-//Get all orders
-exports.getOrders = async (req, res) => {
+//Get all orders of logged in user 
+exports.getAllOrders = async (req, res) => {
   try{
     const orders = await Order.find({orderedBy: req.user._id})
     res.json({
@@ -40,21 +40,50 @@ exports.getOrders = async (req, res) => {
   }	
 }
 
-//Update order details
-exports.updateOrder = async (req, res) => {
+//Get order by id
+exports.getOrder = async (req, res) => {
   try{
-    const order = await Order.findOneAndUpdate({_id: req.params._id, orderedBy: req.user._id} , req.body, {new: true})
-
-    if(!order) {
-      res.status(404).json({
-        success: false,
-        message: "Order not found"
-      })
-    }
+    const order = await Order.find({_id: req.params._id, orderedBy: req.user._id})
     res.json({
       success: true,
       data: order
     })
+  } catch(e) {
+    res.json({
+      success: false,
+      message: e.message
+    })
+  }	
+}
+
+
+//Update order details
+exports.updateOrder = async (req, res) => {
+  const updates = Object.keys(req.body)
+  const allowedUpdates = ['paymentMode' ]
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+  if (!isValidOperation) {
+      return res.status(400).json({
+          success: false,
+          message: "Invalid Updates"
+      })
+  }
+
+  try{
+      const order = await Order.findOneAndUpdate({_id: req.params._id, createdBy: req.user._id}, req.body, {new: true})
+
+      if(!order) {
+          return res.status(404).json({
+            success: false,
+            message: "Order not found"
+          })
+        }
+
+      res.json({
+          success: true,
+          data: order
+      })
   } catch(e) {
     console.log(e)
     res.status(400).json({
@@ -67,7 +96,15 @@ exports.updateOrder = async (req, res) => {
 //Delete Order
 exports.deleteOrder = async (req, res) => {
   try{
-    await Order.findOneAndDelete({_id: req.params._id, orderedBy: req.user._id})
+    const order = await Order.findOne({_id: req.params._id, orderedBy: req.user._id})
+
+    if(!order){
+      res.status(404).json({
+        success: false,
+        message: "Order not found"
+      })
+    }
+    order.remove()
     res.json({
       success: true,
       data: "Order deleted successfully"

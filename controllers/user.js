@@ -38,6 +38,27 @@ exports.loginUser = async (req, res) => {
   }
 }
 
+//Logout User
+exports.logoutUser = async(req, res) => {
+  try{
+    req.tokens === ''
+    // await req.data.save()
+
+    res.json({
+      sucess: true, 
+      message: 'Logged out successfully'
+    })
+  } catch(e) {
+    console.log(e)
+    res.status(500).json({
+      success: false,
+      message: e.message
+    })
+
+  }
+
+}
+
 //Get all users
 exports.getUsers = async (req, res) => {
   try{
@@ -54,22 +75,45 @@ exports.getUsers = async (req, res) => {
   }	
 }
 
-//Update user details
-exports.updateUser = async (req, res) => {
+//Get Personal Profile
+exports.getProfile = async (req,res) => {
   try{
-    const user = await User.findByIdAndUpdate({_id: req.user._id} , req.body, {new: true})
-
-    if(!user) {
-      res.status(404).json({
-        success: false,
-        message: "User not found"
-      })
-    }
+    const user = await req.user
     res.json({
       success: true,
       data: user
     })
   } catch(e) {
+    res.status(500).json({
+      success: false,
+      message: e.message
+    })
+  }
+}
+
+//Update user details
+exports.updateUser = async (req, res) => {
+  const updates = Object.keys(req.body)
+  const allowedUpdates = ['name', 'email', 'password', 'contact']
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
+
+  if(!isValidOperation){
+    return res.status(400).send({error: 'invalid Updates'})
+  }
+  if (!req.user){
+    return res.status(401).json({
+      success: false,
+      message: "Please login"
+    })
+  }
+
+  try{    
+    updates.forEach((update) => req.user[update] = req.body[update])
+
+    req.user.save()
+
+    res.send(req.user)
+  }catch(e) {
     res.status(400).json({
       success: false,
       message: e.message
@@ -79,6 +123,12 @@ exports.updateUser = async (req, res) => {
 
 //Delete User
 exports.deleteUser = async (req, res) => {
+  if (!req.user){
+    return res.status(401).json({
+      success: false,
+      message: "Please login"
+    })
+  }
   try{
     await User.findByIdAndDelete(req.user._id)
     res.json({

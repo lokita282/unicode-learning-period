@@ -28,19 +28,23 @@ const userSchema = mongoose.Schema({
     maxLength: 10,
     required: [true, 'Please provide a contact number']
   },
-  tokens: [{
-    token: {
-      type: String,
-      required: true
-    }
-  }]
+  role: {
+    type: String,
+    default: 'user',
+  },
+  // tokens: [{
+  //   token: {
+  //     type: String,
+  //     required: true
+  //   }
+  // }]
 },{timestamps:true})
 
 userSchema.methods.generateAuthToken = async function () {
   const user = this
   const token = jwt.sign({_id: user.id.toString()}, process.env.TOKEN_SECRET)
 
-  user.tokens = user.tokens.concat({token})
+  //user.tokens = user.tokens.concat({token})
 
   await user.save()
 
