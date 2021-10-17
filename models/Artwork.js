@@ -2,8 +2,7 @@ const mongoose = require('mongoose')
 
 const artworkSchema = new mongoose.Schema({
   image: {
-    type: String,
-    required: true
+    type: Buffer
   },
   price: {
     type: Number,
@@ -17,7 +16,7 @@ const artworkSchema = new mongoose.Schema({
     type: Array,
     description: 'Enter length and breadth'
 
-  }
+  },
 },{timestamps:true})
 
 module.exports = mongoose.model('Artwork', artworkSchema)

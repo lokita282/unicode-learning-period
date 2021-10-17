@@ -4,6 +4,7 @@ const auth = require('../middleware/auth')
 const isAdmin = require('../middleware/isAdmin')
 const {
   createArtwork,
+  addImage,
   getArtworks,
   updateArtwork,
   deleteArtwork
@@ -11,6 +12,9 @@ const {
 
 //Create new artwork
 router.post('/new', auth, isAdmin, createArtwork)
+
+//Add image of artwork
+router.post('/image', auth, isAdmin,  addImage)
 
 //Get artworks
 router.get('/get', getArtworks)

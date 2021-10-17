@@ -1,3 +1,5 @@
+const multer = require('multer')
+const path = require('path')
 const Artwork = require('../models/Artwork')
 
 //Create an artwork
@@ -16,6 +18,32 @@ exports.createArtwork = async (req, res) => {
       message: e.message
     })
   }
+}
+
+//Add image of the artwork
+const storage = multer.diskStorage({
+  destination: './public/uploads/',
+  filename: function(req, file, cb) {
+    cb(null, file.fieldname +'-'+ Date.now() + path.extname(file.originalname))
+  }
+})
+
+const upload = multer({
+  storage
+}).single('upload')
+
+exports.addImage = (req, res) => {
+  upload(req, res, (err)=> {
+    if(err){
+      res.json({
+        success: false,
+        error: err.message
+      })
+    }
+    res.json({
+      success: true
+    })
+  })
 }
 
 //Get all artworks

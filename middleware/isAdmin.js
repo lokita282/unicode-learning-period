@@ -1,5 +1,4 @@
 const isAdmin = (req, res, next) => {
-  console.log('y')
   if ((req.user) && (req.user.role === "admin" || req.user.role === "Admin" || req.user.role === "ADMIN")) {
     next()
   } else {
