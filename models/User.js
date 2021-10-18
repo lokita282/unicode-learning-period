@@ -32,12 +32,9 @@ const userSchema = mongoose.Schema({
     type: String,
     default: 'user',
   },
-  // tokens: [{
-  //   token: {
-  //     type: String,
-  //     required: true
-  //   }
-  // }]
+  profilePic: {
+    type: Buffer
+  }
 },{timestamps:true})
 
 userSchema.methods.generateAuthToken = async function () {

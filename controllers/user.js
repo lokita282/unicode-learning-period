@@ -1,3 +1,6 @@
+const multer = require('multer')
+const sharp = require('sharp')
+const { sendWelcomeEmail, sendCancellationEmail} = require('../emails/account')
 const User = require('../models/User')
 
 //Register a user
@@ -6,6 +9,7 @@ exports.registerNewUser = async (req, res) => {
      const user = new User(req.body)
      const token = await user.generateAuthToken()
      await user.save()
+     sendWelcomeEmail(user.email, user.name)
      res.status(201).json({
        success: true,
        data: user,
@@ -20,6 +24,53 @@ exports.registerNewUser = async (req, res) => {
   }
 }
 
+//Add profile picture
+exports.upload = multer({
+  limits: {
+    fileSize: 1000000
+  },
+  fileFilter(req, file, cb) {
+    if(!file.originalname.match(/\.jpg|jpeg|png/)) {
+      return cb(new Error('Please upload image format'))
+    }
+
+    cb(undefined, true)
+  }
+})
+
+
+exports.addPfp = async (req, res) => {
+  const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
+  req.user.profilePic = buffer
+  await req.user.save()
+  res.json({
+    success: true
+  })
+}
+
+exports.errorHandler = (error, req, res, next) => {
+  res.status(400).send({ error: error.message })
+}
+
+//View the profile picture
+exports.viewPfp = async(req, res) => {
+  try{
+    const user = await User.findById(req.params.id)
+    console.log('here')
+    if(!user || !user.profilePic) {
+      throw new Error()
+    }
+
+    res.set('Content-Type', 'image/png')
+    res.send(user.profilePic)
+  } catch (e) {    
+    res.status(404).json({
+      success: false,
+      message: e
+    })
+  } 
+}
+
 //Login user
 exports.loginUser = async (req, res) => {
   try{
@@ -31,7 +82,7 @@ exports.loginUser = async (req, res) => {
       token
     })
   } catch(e) {
-    res.json({
+    res.status(400).json({
       success: false,
       message: e.message
     })
@@ -54,9 +105,7 @@ exports.logoutUser = async(req, res) => {
       success: false,
       message: e.message
     })
-
   }
-
 }
 
 //Get all users
@@ -130,13 +179,14 @@ exports.deleteUser = async (req, res) => {
     })
   }
   try{
-    await User.findByIdAndDelete(req.user._id)
+    await req.user.remove()
+    sendCancellationEmail(req.user.email, req.user.name)
     res.json({
       success: true,
       data: "User deleted successfully"
     })
   } catch(e) {
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: e.message
     })
