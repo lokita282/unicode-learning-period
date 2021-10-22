@@ -27,7 +27,7 @@ exports.createOrder = async (req, res) => {
 //Get all orders of logged in user 
 exports.getAllOrders = async (req, res) => {
   try{
-    const orders = await Order.find({orderedBy: req.user._id})
+    const orders = await Order.find({orderedBy: req.user.id})
     res.json({
       success: true,
       data: orders
@@ -96,10 +96,10 @@ exports.updateOrder = async (req, res) => {
 //Delete Order
 exports.deleteOrder = async (req, res) => {
   try{
-    const order = await Order.findOne({_id: req.params._id, orderedBy: req.user._id})
+    const order = await Order.findOne({_id: req.params.id, orderedBy: req.user.id})
 
     if(!order){
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: "Order not found"
       })
