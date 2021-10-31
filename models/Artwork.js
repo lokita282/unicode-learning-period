@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose';
 
 const artworkSchema = new mongoose.Schema({
   image: {
@@ -19,4 +19,4 @@ const artworkSchema = new mongoose.Schema({
   },
 },{timestamps:true})
 
-module.exports = mongoose.model('Artwork', artworkSchema)
+export default mongoose.model('Artwork', artworkSchema)

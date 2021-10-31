@@ -1,10 +1,10 @@
-const multer = require('multer')
-const sharp = require('sharp')
-const { sendWelcomeEmail, sendCancellationEmail} = require('../emails/account')
-const User = require('../models/User')
+import multer from 'multer';
+import sharp from 'sharp';
+import { sendWelcomeEmail, sendCancellationEmail} from '../emails/account.js'
+import User from '../models/User.js';
 
 //Register a user
-exports.registerNewUser = async (req, res) => {
+const registerNewUser = async (req, res) => {
   try{
      const user = new User(req.body)
      const token = await user.generateAuthToken()
@@ -25,7 +25,7 @@ exports.registerNewUser = async (req, res) => {
 }
 
 //Add profile picture
-exports.upload = multer({
+const upload = multer({
   limits: {
     fileSize: 1000000
   },
@@ -39,7 +39,7 @@ exports.upload = multer({
 })
 
 
-exports.addPfp = async (req, res) => {
+const addPfp = async (req, res) => {
   const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer()
   req.user.profilePic = buffer
   await req.user.save()
@@ -48,12 +48,12 @@ exports.addPfp = async (req, res) => {
   })
 }
 
-exports.errorHandler = (error, req, res, next) => {
+const errorHandler = (error, req, res, next) => {
   res.status(400).send({ error: error.message })
 }
 
 //View the profile picture
-exports.viewPfp = async(req, res) => {
+const viewPfp = async(req, res) => {
   try{
     const user = await User.findById(req.params.id)
     console.log('here')
@@ -72,7 +72,7 @@ exports.viewPfp = async(req, res) => {
 }
 
 //Login user
-exports.loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
   try{
     const user = await User.findByCredentials(req.body.email, req.body.password)
     const token = await user.generateAuthToken()
@@ -90,7 +90,7 @@ exports.loginUser = async (req, res) => {
 }
 
 //Logout User
-exports.logoutUser = async(req, res) => {
+const logoutUser = async(req, res) => {
   try{
     req.tokens === ''
     // await req.data.save()
@@ -109,7 +109,7 @@ exports.logoutUser = async(req, res) => {
 }
 
 //Get all users
-exports.getUsers = async (req, res) => {
+const getUsers = async (req, res) => {
   try{
     const users = await User.find({})
     res.json({
@@ -125,7 +125,7 @@ exports.getUsers = async (req, res) => {
 }
 
 //Get Personal Profile
-exports.getProfile = async (req,res) => {
+const getProfile = async (req,res) => {
   try{
     const user = await req.user
     res.json({
@@ -141,7 +141,7 @@ exports.getProfile = async (req,res) => {
 }
 
 //Update user details
-exports.updateUser = async (req, res) => {
+const updateUser = async (req, res) => {
   const updates = Object.keys(req.body)
   const allowedUpdates = ['name', 'email', 'password', 'contact']
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -171,7 +171,7 @@ exports.updateUser = async (req, res) => {
 }
 
 //Delete User
-exports.deleteUser = async (req, res) => {
+const deleteUser = async (req, res) => {
   if (!req.user){
     return res.status(401).json({
       success: false,
@@ -191,5 +191,19 @@ exports.deleteUser = async (req, res) => {
       message: e.message
     })
   }
+}
+
+export {
+  registerNewUser,
+  upload,
+  addPfp,
+  errorHandler,
+  viewPfp,
+  loginUser,
+  logoutUser,
+  getUsers,
+  getProfile,
+  updateUser,
+  deleteUser
 }
 

@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer')
+import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
   service: "hotmail",
@@ -32,7 +32,7 @@ const sendCancellationEmail = (email, name) => transporter.sendMail({
     console.log("Message sent: %s", info.messageId)
 })
 
-module.exports = {
+export {
   sendWelcomeEmail,
   sendCancellationEmail
 }

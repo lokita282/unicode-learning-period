@@ -1,14 +1,15 @@
-const express = require('express')
-const router = new express.Router()
-const auth = require('../middleware/auth')
-const isAdmin = require('../middleware/isAdmin')
-const {
+import  express from 'express'
+import  auth from '../middleware/auth.js'
+import  isAdmin from '../middleware/isAdmin.js'
+import  {
   createOrder,
   getAllOrders,
   getOrder,
   updateOrder,
   deleteOrder
-} = require('../controllers/order')
+} from '../controllers/order.js'
+
+const router = new express.Router()
 
 
 //Create new Order
@@ -26,4 +27,4 @@ router.put('/update/:id', auth, updateOrder)
 //Delete Order
 router.delete('/delete/:id', auth, deleteOrder)
 
-module.exports = router
+export default router

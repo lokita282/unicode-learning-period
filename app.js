@@ -1,16 +1,20 @@
-require('dotenv').config()
+import dotenv from 'dotenv'
+dotenv.config()
 
-const express = require('express')
+import express from 'express'
 const app = express()
-const db = require('./config/db')
-const morgan = require('morgan')
-const passport = require('passport')
-const userRouter = require('./routes/user')
-const artworkRouter = require('./routes/artwork')
-const orderRouter = require('./routes/order')
+
+import db from'./config/db.js'
+import morgan from'morgan'
+import passport from'passport'
+
+import userRouter from'./routes/user.js'
+import artworkRouter from'./routes/artwork.js'
+import orderRouter from'./routes/order.js'
+
 const port = process.env.PORT || 3000
 
- db()
+await db()
 
 app.use(morgan(':method :url :status :response-time ms'))
 
@@ -23,4 +27,6 @@ app.use('/api/order', orderRouter)
 app.use(passport.initialize())
 
 
-app.listen(port, () => console.log(`server has started on port ${port}`))
+const server = app.listen(port, () => console.log(`server has started on port ${port}`))
+
+export default server

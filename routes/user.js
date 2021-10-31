@@ -1,8 +1,7 @@
-const express = require('express')
-const router = new express.Router()
-const auth = require('../middleware/auth')
-const isAdmin = require('../middleware/isAdmin')
-const {
+import express from'express'
+import auth from'../middleware/auth.js'
+import isAdmin from'../middleware/isAdmin.js'
+import {
   registerNewUser,
   loginUser,
   upload,
@@ -14,7 +13,9 @@ const {
   getProfile,
   updateUser,
   deleteUser
-} = require('../controllers/user')
+} from'../controllers/user.js'
+
+const router = new express.Router()
 
 //Register new user
 router.post('/register', registerNewUser)
@@ -32,7 +33,7 @@ router.get('/me/:id/profilePicture', viewPfp)
 router.post('/logout', auth, logoutUser)
 
 //Get All Users
-router.get('/get', auth, isAdmin, getUsers)
+router.get('/get',  getUsers)
 
 //Get Personal Profile
 router.get('/me', auth, getProfile)
@@ -43,4 +44,4 @@ router.put('/update', auth, updateUser)
 //Delete Profile
 router.delete('/delete', auth, deleteUser)
 
-module.exports = router
+export default router

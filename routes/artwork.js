@@ -1,14 +1,15 @@
-const express = require('express')
-const router = new express.Router()
-const auth = require('../middleware/auth')
-const isAdmin = require('../middleware/isAdmin')
-const {
+import express from 'express'
+import auth from '../middleware/auth.js'
+import isAdmin from '../middleware/isAdmin.js'
+import {
   createArtwork,
   addImage,
   getArtworks,
   updateArtwork,
   deleteArtwork
-} = require('../controllers/artwork')
+} from '../controllers/artwork.js'
+
+const router = new express.Router()
 
 //Create new artwork
 router.post('/new', auth, isAdmin, createArtwork)
@@ -25,4 +26,4 @@ router.put('/update/:id', auth, isAdmin, updateArtwork)
 //Delete artwork
 router.delete('/delete/:id', auth, isAdmin, deleteArtwork)
 
-module.exports = router
+export default router

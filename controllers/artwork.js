@@ -1,9 +1,9 @@
-const multer = require('multer')
-const path = require('path')
-const Artwork = require('../models/Artwork')
+import multer from 'multer';
+import path from 'path';
+import Artwork from '../models/Artwork.js';
 
 //Create an artwork
-exports.createArtwork = async (req, res) => {
+const createArtwork = async (req, res) => {
   try{
      const artwork = new Artwork(req.body)
      await artwork.save()
@@ -32,7 +32,7 @@ const upload = multer({
   storage
 }).single('upload')
 
-exports.addImage = (req, res) => {
+const addImage = (req, res) => {
   upload(req, res, (err)=> {
     if(err){
       res.json({
@@ -47,7 +47,7 @@ exports.addImage = (req, res) => {
 }
 
 //Get all artworks
-exports.getArtworks = async (req, res) => {
+const getArtworks = async (req, res) => {
   try{
     const artworks = await Artwork.find({})
     res.json({
@@ -63,7 +63,7 @@ exports.getArtworks = async (req, res) => {
 }
 
 //Update artwork details
-exports.updateArtwork = async (req, res) => {
+const updateArtwork = async (req, res) => {
   try{
     const artwork = await Artwork.findByIdAndUpdate({_id: req.params.id} , req.body, {new: true})
 
@@ -86,7 +86,7 @@ exports.updateArtwork = async (req, res) => {
 }
 
 //Delete Artwork
-exports.deleteArtwork = async (req, res) => {
+const deleteArtwork = async (req, res) => {
   try{
     await Artwork.findByIdAndDelete(req.params.id)
     res.json({
@@ -99,5 +99,13 @@ exports.deleteArtwork = async (req, res) => {
       message: e.message
     })
   }
+}
+
+export {
+  createArtwork,
+  addImage,
+  getArtworks,
+  updateArtwork,
+  deleteArtwork
 }
 

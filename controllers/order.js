@@ -1,11 +1,10 @@
-const Order = require('../models/Order')
-const Artwork = require('../models/Artwork')
-const User = require('../models/User')
+import Orders from '../models/Order.js';
+import Artwork from '../models/Artwork.js';
+import User from '../models/User.js';
 
 //Create a order
-exports.createOrder = async (req, res) => {
+const createOrder = async (req, res) => {
   try{
-     //const order = new Order(req.body)
      const order = new Order({
        ...req.body,
        orderedBy: req.user._id
@@ -25,7 +24,7 @@ exports.createOrder = async (req, res) => {
 }
 
 //Get all orders of logged in user 
-exports.getAllOrders = async (req, res) => {
+const getAllOrders = async (req, res) => {
   try{
     const orders = await Order.find({orderedBy: req.user.id})
     res.json({
@@ -41,7 +40,7 @@ exports.getAllOrders = async (req, res) => {
 }
 
 //Get order by id
-exports.getOrder = async (req, res) => {
+const getOrder = async (req, res) => {
   try{
     const order = await Order.find({_id: req.params._id, orderedBy: req.user._id})
     res.json({
@@ -58,7 +57,7 @@ exports.getOrder = async (req, res) => {
 
 
 //Update order details
-exports.updateOrder = async (req, res) => {
+const updateOrder = async (req, res) => {
   const updates = Object.keys(req.body)
   const allowedUpdates = ['paymentMode' ]
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -94,7 +93,7 @@ exports.updateOrder = async (req, res) => {
 }
 
 //Delete Order
-exports.deleteOrder = async (req, res) => {
+const deleteOrder = async (req, res) => {
   try{
     const order = await Order.findOne({_id: req.params.id, orderedBy: req.user.id})
 
@@ -115,5 +114,13 @@ exports.deleteOrder = async (req, res) => {
       message: e.message
     })
   }
+}
+
+export {
+  createOrder,
+  getAllOrders,
+  getOrder,
+  updateOrder,
+  deleteOrder
 }
 
