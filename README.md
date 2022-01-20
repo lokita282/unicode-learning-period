@@ -1,33 +1,37 @@
-# Unicode-learning-period
+<h1 align="center">Unicode Learning Period - Art Store</h1>
 
-Created using Node JS
+A backend project created using Node JS 
 
-## Env variabes
 
-Create a .env file in the root and then add the following
+## Purpose of the Application:
+ 
+It is the backend for an art store website where the owner(admin) can add artworks with their images and users can browse through them to place an order. Authentication has been applied.\
+Another feature implemented is the auto-emailing service.
 
-PORT = 3000
-MONGO_URI = your mongodb uri
+## Installation and Running
 
-## Run
+Clone the repository in your local machine.
+
+#### ENV Variables
+Create a .env file in the root directory and then add the following
+
+PORT=The port at which you want to run the backend server on
+
+DATABASE_URL=the link of your MongoDB database
+
+TOKEN_SECRET=your jwt secret
+
+#### Installing dependencies
+Install all the dependencies required for the backend to run, by the command:
+```bash
+npm install
+```
+#### Run
+To run the server, use the command:
+```bash
 npm run dev
+```
 
-## Routes 
+If you get a message like below in the terminal, it means that your backend server is up and running and you can continue with the rest of the project
 
-Create new user
-
-[![image.png](https://i.postimg.cc/SNt8V6v7/image.png)](https://postimg.cc/1fwf3qPf)
-
-Get all users
-
-[![image.png](https://i.postimg.cc/1tC5PH6v/image.png)](https://postimg.cc/9R9jYyL9)
-
-Update user
-
-[![image.png](https://i.postimg.cc/Df48F9js/image.png)](https://postimg.cc/SjqyfvpN)
-
-Delete User
-
-[![image.png](https://i.postimg.cc/7hrDqWhM/image.png)](https://postimg.cc/JDxSqKbG)
-
-[Similar routes created for artworks and orders]
+[![image.png](https://i.postimg.cc/5NkK1qcr/image.png)](https://postimg.cc/qzyxxKvc)
